@@ -2,10 +2,16 @@ using UnityEngine;
 
 public class FPSController : MonoBehaviour
 {
-    public float speed = 6f;
+    public float walkspeed = 6f;
+    public float sprintspeed = 10f;
     public float mouseSensitivity = 150f;
     public float gravity = -9.81f;
     public float jumpHeight = 2f;
+
+    public Camera playerCamera;
+    public float normalFOV = 60f;
+    public float sprintFOV = 80f;
+    public float fovSpeed = 8f;
 
     public Transform cameraTransform;
     public Transform groundCheck;
@@ -58,8 +64,15 @@ public class FPSController : MonoBehaviour
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
+        // Check if sprint key is held
+        bool isMovingForward = z > 0;
+        bool isSprinting = Input.GetKey(KeyCode.LeftShift) && isMovingForward && isGrounded;
+        HandleFOV(isSprinting);
+
+        float currentSpeed = isSprinting ? sprintspeed : walkspeed;
+
         Vector3 move = transform.right * x + transform.forward * z;
-        controller.Move(move * speed * Time.deltaTime);
+        controller.Move(move * currentSpeed * Time.deltaTime);
 
         // Jump
         if (Input.GetButtonDown("Jump") && isGrounded)
@@ -71,4 +84,14 @@ public class FPSController : MonoBehaviour
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
     }
+
+    // Change FOV while sprinting
+
+    void HandleFOV(bool isSprinting)
+    {
+        float targetFOV = isSprinting ? sprintFOV : normalFOV;
+
+        playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, targetFOV, fovSpeed * Time.deltaTime);
+    }
 }
+

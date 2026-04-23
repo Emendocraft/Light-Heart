@@ -383,7 +383,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 616362558}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -1.05, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -609,10 +609,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01bed604582aa274bb1fa9aa1efe2c6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovementCC
-  speed: 5
+  walkspeed: 6
+  sprintspeed: 10
   mouseSensitivity: 300
   gravity: -9.81
   jumpHeight: 2
+  playerCamera: {fileID: 1960244716}
+  normalFOV: 0
+  sprintFOV: 0
+  fovSpeed: 0
   cameraTransform: {fileID: 1960244712}
   groundCheck: {fileID: 616362559}
   groundMask:
@@ -712,8 +717,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1960244712}
   - {fileID: 616362559}
+  - {fileID: 1960244712}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1960244711
@@ -763,8 +768,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4fef61adfff3ec48843d95dffadba17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraControllerFPS
-  sensitivity: 2
-  xRotation: 0
 --- !u!114 &1960244714
 MonoBehaviour:
   m_ObjectHideFlags: 0
