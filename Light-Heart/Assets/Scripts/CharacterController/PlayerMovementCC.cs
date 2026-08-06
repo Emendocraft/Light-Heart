@@ -2,6 +2,16 @@ using UnityEngine;
 
 public class FPSController : MonoBehaviour
 {
+    [Header("Stamina")]
+    public float maxStamina = 100f;
+    public float staminaDrainRate = 20f;
+    public float staminaRegenRate = 15f;
+    public float staminaRegenDelay = 1.5f;
+    public float staminaPercent => currentStamina / maxStamina;
+
+    private float currentStamina;
+    private float regenDelayTimer;
+
     public float walkspeed = 6f;
     public float sprintspeed = 10f;
     public float mouseSensitivity = 150f;
@@ -31,6 +41,8 @@ public class FPSController : MonoBehaviour
 
         // Lock cursor
         Cursor.lockState = CursorLockMode.Locked;
+
+        currentStamina = maxStamina;
     }
 
     void Update()
@@ -66,7 +78,9 @@ public class FPSController : MonoBehaviour
 
         // Check if sprint key is held
         bool isMovingForward = z > 0;
-        bool isSprinting = Input.GetKey(KeyCode.LeftShift) && isMovingForward && isGrounded;
+        bool wantsToSprint = Input.GetKey(KeyCode.LeftShift) && isMovingForward && isGrounded;
+        bool isSprinting = wantsToSprint && currentStamina > 0f;
+        HandleStamina(isSprinting);
         HandleFOV(isSprinting);
 
         float currentSpeed = isSprinting ? sprintspeed : walkspeed;
@@ -92,6 +106,30 @@ public class FPSController : MonoBehaviour
         float targetFOV = isSprinting ? sprintFOV : normalFOV;
 
         playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, targetFOV, fovSpeed * Time.deltaTime);
+    }
+
+    // Handle Stamina while sprinting
+
+    void HandleStamina(bool isSprinting)
+    {
+        if (isSprinting)
+        {
+            currentStamina -= staminaDrainRate * Time.deltaTime;
+            currentStamina = Mathf.Max(currentStamina, 0f);
+            regenDelayTimer = staminaRegenDelay;
+        }
+        else
+        {
+            if (regenDelayTimer > 0f)
+            {
+                regenDelayTimer -= Time.deltaTime;
+            }
+            else
+            {
+                currentStamina += staminaRegenRate * Time.deltaTime;
+                currentStamina = Mathf.Min(currentStamina, maxStamina);
+            }
+        }
     }
 }
 
