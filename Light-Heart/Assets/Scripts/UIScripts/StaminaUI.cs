@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class StaminaUI : MonoBehaviour
 {
     [SerializeField] private FPSController player;
-    [SerializeField] private Slider staminaSlider;
+    [SerializeField] private Image staminaSliderBar;
 
     [Header("Optional: ausblenden wenn voll")]
     [SerializeField] private CanvasGroup canvasGroup;
@@ -21,7 +21,7 @@ public class StaminaUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        staminaSlider.value = player.staminaPercent;
+        staminaSliderBar.fillAmount = player.staminaPercent;
 
         if (hideWhenFull && canvasGroup != null)
         {
